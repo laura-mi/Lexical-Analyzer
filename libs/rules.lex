@@ -4,6 +4,7 @@
    #include <stdio.h>
    FILE *fp;
 %}
+%option yylineno
 digit [0-9]
 alpha [a-zA-Z]
 id   [a-zA-Z_][a-zA-Z0-9_]*
@@ -20,31 +21,46 @@ bit_operators "~"|">>"|"<<"
 rel_operators "<"|">"|"<="|">="|"=="
 oth_operators "typeof"|"sizeof"|"new"|"malloc"|"delete"|"type"|"."|"#"|"->"
 separator ";"|":"|","|"("|")"|"["|"]"|"{"|"}"|"()"|"{}"|"[]"
-comment ("//".*)|([/][*][^*]*[*]+([^*/][^*]*[*]+)*[/])
-
+comment1 "//".*
+comment2 [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 %%
-
 {int_nr} {
-			fprintf(fp,"An integer: %s (%d)\n", yytext,
-			atoi( yytext ) );
-}
+			fprintf(fp,"Line %d: An integer: %s (%d)\n", yylineno, yytext,atoi( yytext ) );}
 {float_nr1}|{float_nr2} {
-			fprintf(fp,"A float: %s (%f)\n", yytext,
-			atoi( yytext ) );
-}
+			fprintf(fp,"Line %d: A float: %s (%f)\n", yylineno, yytext,atoi( yytext ) );}
 {keyword} {
-			fprintf(fp,"A keyword: %s\n", yytext );
-}
-{id} 		fprintf(fp,"An identifier: %s\n", yytext );
+			fprintf(fp,"Line %d: A keyword: %s\n", yylineno, yytext);}
+{id} 		fprintf(fp,"Line %d: An identifier: %s\n", yylineno, yytext );
 {ar_operators}|{logical_operators}|{bit_operators}|{rel_operators}|{oth_operators} {
-			fprintf(fp,"An operator: %s\n", yytext );
+			fprintf(fp,"Line %d: An operator: %s\n", yylineno, yytext );}
+{string}	fprintf(fp,"Line %d: A string: %s\n", yylineno, yytext);
+{character} fprintf(fp,"Line %d: A character %s\n", yylineno, yytext);
+{separator} fprintf(fp,"Line %d: A separator %s\n", yylineno, yytext);
+{comment1}	fprintf(fp,"Line %d: A comment of one line: %s\n", yylineno, yytext);
+{comment2}	{
+				int lines = 1;	
+				int length = strlen(yytext);								
+				for(int i = 1;i<length;i++)
+					if(yytext[i] == '\n') lines++;
+				
+				char* input= strtok(yytext,"\n");
+				char* first_line = input;
+				char* last_line;				
+				
+				while (input != NULL)
+				  {					
+					last_line = input;
+					//lines++;
+					input = strtok (NULL, "\n");
+				  }			
+						
+				if(lines == 1)
+					fprintf(fp,"Line %d: A comment of one line: %s\n", yylineno, yytext);
+				else
+				fprintf(fp,"Line %d: A comment of %d lines: First line: %s [...] Last line: %s\n", yylineno-lines+1,lines, first_line, last_line);		
 }
-{string}	fprintf(fp,"A string: %s\n", yytext);
-{character} fprintf(fp,"A character %s\n", yytext);
-{separator} fprintf(fp,"A separator %s\n", yytext);
-{comment}	//fprintf(fp,"A comment %s\n",yytext);
 [ \t\n]+ /* eat up whitespace */
-. 			fprintf(fp,"Unrecognized character: %s\n", yytext );
+. 			fprintf(fp,"Line %d: Unrecognized character: %s\n", yylineno, yytext );
 %%
 
 int main( int argc, char **argv )
@@ -52,7 +68,7 @@ int main( int argc, char **argv )
 	++argv, --argc; /* skip over program name */
 	
 	fp = fopen("Output.txt", "w+");
-    fprintf(fp, "The resulted tokens are:...\n");
+    fprintf(fp, "The resulted tokens are:\n");
 	
 	if ( argc > 0 )
 	yyin = fopen( argv[0], "r" );

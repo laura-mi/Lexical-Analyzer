@@ -1,61 +1,69 @@
-The resulted tokens are:...
-A keyword: int
-An identifier: a
-A separator ;
-An operator: *
-An identifier: dgbdb
-An operator: *
-A string: "/*kjh*/"
-A string: "/*"
-An identifier: kjh
-A string: "'\"
-Unrecognized character: '
-Unrecognized character: "
-A keyword: int
-An identifier: main
-A separator ()
-A separator {
-A keyword: if
-A separator (
-A separator (
-A float: 12e3 (0.000000)
-An operator: -
-An identifier: e12
-An operator: +
-An integer: 3 (3)
-An operator: ==
-A float: 10.5e+2 (0.000000)
-An identifier: e12
-An operator: .
-An identifier: e5
-An operator: <<
-An operator: =
-An identifier: e
-An operator: *
-An operator: /
-An identifier: e12
-An operator: .
-An identifier: eef
-A separator )
-An operator: ++
-An identifier: a
-An operator: ++
-An operator: +
-An identifier: e
-An operator: +
-An integer: 5 (5)
-An identifier: ef
-An operator: --
-An operator: .
-An identifier: ef
-A separator )
-A separator }
-Unrecognized character: "
-An identifier: kjhg
-An identifier: kjh
-An identifier: kj
-An identifier: h
-Unrecognized character: "
-A keyword: else
-A keyword: if
-An identifier: then
+The resulted tokens are:
+Line 1: A keyword: int
+Line 1: An identifier: a
+Line 1: A separator ;
+Line 1: A comment of one line: /* hg edh edhg ed*/
+Line 1: A comment of one line: /**lkhjkljhlkjhl***/
+Line 1: A comment of one line: ///
+Line 2: A comment of 3 lines: First line: /* gtlkhmjht // hedfghdtha"lkhlkjhlk sdfgsfg sf gsdfgfdg [...] Last line: dghdg*/
+Line 4: An operator: *
+Line 4: A comment of 9 lines: First line: /* [...] Last line: //* */
+Line 13: An identifier: dgbdb
+Line 16: An operator: *
+Line 16: A comment of one line: //*/*/*/*/*/
+Line 17: A comment of one line: /*kjh "*/
+Line 17: A string: "/*kjh*/"
+Line 17: A string: "/*"
+Line 17: An identifier: kjh
+Line 17: A string: "'\"
+Line 17: Unrecognized character: '
+Line 17: Unrecognized character: "
+Line 17: A keyword: int
+Line 17: An identifier: main
+Line 17: A separator ()
+Line 17: A separator {
+Line 18: A keyword: if
+Line 18: A separator (
+Line 18: A separator (
+Line 18: A float: 12e3 (0.000000)
+Line 18: An operator: -
+Line 18: An identifier: e12
+Line 18: An operator: +
+Line 18: An integer: 3 (3)
+Line 18: An operator: ==
+Line 18: A float: 10.5e+2 (0.000000)
+Line 18: An identifier: e12
+Line 18: An operator: .
+Line 18: An identifier: e5
+Line 18: An operator: <<
+Line 18: An operator: =
+Line 18: An identifier: e
+Line 18: An operator: *
+Line 18: An operator: /
+Line 18: An identifier: e12
+Line 18: An operator: .
+Line 18: An identifier: eef
+Line 18: A separator )
+Line 18: An operator: ++
+Line 18: An identifier: a
+Line 18: An operator: ++
+Line 18: An operator: +
+Line 18: An identifier: e
+Line 18: An operator: +
+Line 18: An integer: 5 (5)
+Line 18: An identifier: ef
+Line 18: An operator: --
+Line 18: An operator: .
+Line 18: An identifier: ef
+Line 18: A separator )
+Line 19: A separator }
+Line 19: Unrecognized character: "
+Line 19: An identifier: kjhg
+Line 19: An identifier: kjh
+Line 19: An identifier: kj
+Line 19: An identifier: h
+Line 19: A comment of 3 lines: First line: /* [...] Last line: */
+Line 21: Unrecognized character: "
+Line 22: A keyword: else
+Line 22: A keyword: if
+Line 22: An identifier: then

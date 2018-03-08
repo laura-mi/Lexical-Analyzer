@@ -162,8 +162,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex.
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -351,8 +370,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 12
-#define YY_END_OF_BUFFER 13
+#define YY_NUM_RULES 13
+#define YY_END_OF_BUFFER 14
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,11 +381,11 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[312] =
     {   0,
-        0,    0,   13,   11,   10,   10,    5,   11,    5,    5,
-        5,   11,    8,    8,    5,    5,    5,    5,    5,    1,
+        0,    0,   14,   12,   11,   11,    5,   12,    5,    5,
+        5,   12,    8,    8,    5,    5,    5,    5,    5,    1,
         5,    5,    5,    4,    8,    5,    4,    4,    4,    4,
         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
-        4,    4,    4,    4,    4,    8,    5,    5,   10,    5,
+        4,    4,    4,    4,    4,    8,    5,    5,   11,    5,
         0,    6,    5,    0,    8,    5,    5,    2,    0,    9,
         2,    1,    0,    5,    5,    4,    4,    4,    4,    4,
         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
@@ -380,7 +399,7 @@ static const flex_int16_t yy_accept[312] =
         4,    4,    4,    4,    3,    4,    4,    4,    4,    4,
         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
-        4,    0,    2,    0,    9,    0,    2,    4,    4,    4,
+        4,    0,    2,    0,   10,    0,    2,    4,    4,    4,
         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
 
@@ -633,6 +652,11 @@ static const flex_int16_t yy_chk[490] =
       311,  311,  311,  311,  311,  311,  311,  311,  311
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static const flex_int32_t yy_rule_can_match_eol[14] =
+    {   0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,     };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -653,8 +677,8 @@ char *yytext;
    #include <math.h>
    #include <stdio.h>
    FILE *fp;
-#line 656 "lex.yy.c"
-#line 657 "lex.yy.c"
+#line 680 "lex.yy.c"
+#line 681 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -871,10 +895,9 @@ YY_DECL
 		}
 
 	{
-#line 25 "rules.lex"
+#line 26 "rules.lex"
 
-
-#line 877 "lex.yy.c"
+#line 900 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -920,6 +943,16 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -935,75 +968,95 @@ case 1:
 YY_RULE_SETUP
 #line 27 "rules.lex"
 {
-			fprintf(fp,"An integer: %s (%d)\n", yytext,
-			atoi( yytext ) );
-}
+			fprintf(fp,"Line %d: An integer: %s (%d)\n", yylineno, yytext,atoi( yytext ) );}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 31 "rules.lex"
+#line 29 "rules.lex"
 {
-			fprintf(fp,"A float: %s (%f)\n", yytext,
-			atoi( yytext ) );
-}
+			fprintf(fp,"Line %d: A float: %s (%f)\n", yylineno, yytext,atoi( yytext ) );}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 35 "rules.lex"
+#line 31 "rules.lex"
 {
-			fprintf(fp,"A keyword: %s\n", yytext );
-}
+			fprintf(fp,"Line %d: A keyword: %s\n", yylineno, yytext);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 38 "rules.lex"
-fprintf(fp,"An identifier: %s\n", yytext );
+#line 33 "rules.lex"
+fprintf(fp,"Line %d: An identifier: %s\n", yylineno, yytext );
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 39 "rules.lex"
+#line 34 "rules.lex"
 {
-			fprintf(fp,"An operator: %s\n", yytext );
-}
+			fprintf(fp,"Line %d: An operator: %s\n", yylineno, yytext );}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 42 "rules.lex"
-fprintf(fp,"A string: %s\n", yytext);
+#line 36 "rules.lex"
+fprintf(fp,"Line %d: A string: %s\n", yylineno, yytext);
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 43 "rules.lex"
-fprintf(fp,"A character %s\n", yytext);
+#line 37 "rules.lex"
+fprintf(fp,"Line %d: A character %s\n", yylineno, yytext);
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 44 "rules.lex"
-fprintf(fp,"A separator %s\n", yytext);
+#line 38 "rules.lex"
+fprintf(fp,"Line %d: A separator %s\n", yylineno, yytext);
 	YY_BREAK
 case 9:
-/* rule 9 can match eol */
 YY_RULE_SETUP
-#line 45 "rules.lex"
-//fprintf(fp,"A comment %s\n",yytext);
+#line 39 "rules.lex"
+fprintf(fp,"Line %d: A comment of one line: %s\n", yylineno, yytext);
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 46 "rules.lex"
-/* eat up whitespace */
+#line 40 "rules.lex"
+{
+				int lines = 1;	
+				int length = strlen(yytext);								
+				for(int i = 1;i<length;i++)
+					if(yytext[i] == '\n') lines++;
+				
+				char* input= strtok(yytext,"\n");
+				char* first_line = input;
+				char* last_line;				
+				
+				while (input != NULL)
+				  {					
+					last_line = input;
+					//lines++;
+					input = strtok (NULL, "\n");
+				  }			
+						
+				if(lines == 1)
+					fprintf(fp,"Line %d: A comment of one line: %s\n", yylineno, yytext);
+				else
+				fprintf(fp,"Line %d: A comment of %d lines: First line: %s [...] Last line: %s\n", yylineno-lines+1,lines, first_line, last_line);		
+}
 	YY_BREAK
 case 11:
+/* rule 11 can match eol */
 YY_RULE_SETUP
-#line 47 "rules.lex"
-fprintf(fp,"Unrecognized character: %s\n", yytext );
+#line 62 "rules.lex"
+/* eat up whitespace */
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 48 "rules.lex"
+#line 63 "rules.lex"
+fprintf(fp,"Line %d: Unrecognized character: %s\n", yylineno, yytext );
+	YY_BREAK
+case 13:
+YY_RULE_SETUP
+#line 64 "rules.lex"
 ECHO;
 	YY_BREAK
-#line 1006 "lex.yy.c"
+#line 1059 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1371,6 +1424,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1447,6 +1504,11 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	if ( c == '\n' )
+		
+    yylineno++;
+;
 
 	return c;
 }
@@ -1914,6 +1976,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -2008,7 +2073,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 48 "rules.lex"
+#line 64 "rules.lex"
 
 
 int main( int argc, char **argv )
@@ -2016,7 +2081,7 @@ int main( int argc, char **argv )
 	++argv, --argc; /* skip over program name */
 	
 	fp = fopen("Output.txt", "w+");
-    fprintf(fp, "The resulted tokens are:...\n");
+    fprintf(fp, "The resulted tokens are:\n");
 	
 	if ( argc > 0 )
 	yyin = fopen( argv[0], "r" );
